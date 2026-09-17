@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Compile & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js v22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Install Compact compiler
+        run: |
+          curl -fsSL https://github.com/midnightntwrk/compact/releases/download/compact-v0.5.1/compact-installer.sh -o /tmp/compact-installer.sh
+          bash /tmp/compact-installer.sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      # Not optional: the installer script only fetches the CLI wrapper, not the
+      # toolchain binary itself. Without `compact update`, every subsequent
+      # `compact compile` fails with "No default compiler set".
+      #
+      # The version is pinned deliberately. A bare `compact update` installs the
+      # latest toolchain, and newer compilers emit async circuit signatures
+      # (`Promise<CircuitResults<..>>`). Since `compact compile` overwrites the
+      # committed `managed/` output, an unpinned toolchain makes CI typecheck the
+      # test suite against different types than the ones it was written for, and
+      # the suite fails to compile. 0.31.1 is the compiler that produced the
+      # checked-in `managed/` output.
+      - name: Download Compact toolchain (pinned)
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          compact update 0.31.1
+
+      - name: Verify Compact version
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          compact --version
+
+      - name: Compile streak contract
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          compact compile contract/streak.compact managed/streak
+
+      - name: Run test suite
+        run: node --experimental-vm-modules node_modules/.bin/jest --testPathPattern=spec/ --forceExit
+
+      - name: Copy ZK assets for frontend build
+        run: npm run copy-zk
+
+      - name: Build frontend
+        run: npm run build
