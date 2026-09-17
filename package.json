@@ -1,0 +1,49 @@
+{
+  "name": "focus-streak",
+  "version": "1.0.0",
+  "description": "Private Focus Streak — a Midnight Compact contract that proves a focus session cleared a minimum length without revealing its exact duration (Level 1 Builder Challenge).",
+  "type": "module",
+  "scripts": {
+    "compile": "compact compile contract/streak.compact managed/streak",
+    "copy-zk": "mkdir -p public/zk/streak/keys public/zk/streak/zkir && cp managed/streak/keys/* public/zk/streak/keys/ && cp managed/streak/zkir/* public/zk/streak/zkir/ && cp managed/streak/contract/index.js app/chain/streak.js && cp managed/streak/contract/index.d.ts app/chain/streak.d.ts",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --testPathPattern=spec/",
+    "test:run": "node --experimental-vm-modules node_modules/.bin/jest --testPathPattern=spec/ --forceExit"
+  },
+  "dependencies": {
+    "@midnight-ntwrk/compact-runtime": "^0.16.0",
+    "@midnight-ntwrk/dapp-connector-api": "^4.0.1",
+    "@midnight-ntwrk/midnight-js-contracts": "^4.1.1",
+    "@midnight-ntwrk/midnight-js-dapp-connector-proof-provider": "^4.1.1",
+    "@midnight-ntwrk/midnight-js-fetch-zk-config-provider": "^4.1.1",
+    "@midnight-ntwrk/midnight-js-indexer-public-data-provider": "^4.1.1",
+    "@midnight-ntwrk/midnight-js-network-id": "^4.1.1",
+    "@midnight-ntwrk/midnight-js-types": "^4.1.1",
+    "@midnight-ntwrk/midnight-js-utils": "^4.1.1",
+    "@midnight-ntwrk/ledger-v8": "^8.1.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "vite-plugin-node-polyfills": "^0.28.0",
+    "vite-plugin-wasm": "^3.6.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^4.7.0",
+    "jest": "^29.7.0",
+    "rollup": "^4.62.4",
+    "ts-jest": "^29.1.4",
+    "typescript": "^6.0.3",
+    "vite": "^6.3.5"
+  },
+  "overrides": {
+    "@midnight-ntwrk/onchain-runtime-v3": "3.0.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}
