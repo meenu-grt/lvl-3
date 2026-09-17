@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "file": "index.js",
+  "sourceRoot": "../../../",
+  "sources": ["contract/streak.compact"],
+  "names": [],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;EAmCA;;;;;;;;;;MAsBA,AAAA,OAGC;;;;;cAHsB,gBAAwB;;;;;;;;;;;;;;;;;;yCAAxB,gBAAwB;;;;;;;;;yCAAxB,gBAAwB;;;OAG9C;MASD,AAAA,UAGC;;;;;cAHyB,gBAAwB;;;;;;;;;;;;;;;;;;yCAAxB,gBAAwB;;;;;;;;;4CAAxB,gBAAwB;;;OAGjD;MAKD,AAAA,WAGC;;;;;;;;;;;;;;;;;;;;;;OAAA;;;;;;;;;;;;GACA;EA9CD;;;;;;;;;;;;;;;;;;;;;;;;;;;;;IAOA;;;;;;;;;yEAAoC;IAKpC;;;;;;;;;yEAA4C;;;;;;;GAkC3C;EAxBD,AAAA,UAGC,4BAHsB,gBAAwB;4BACtC,gBAAc;;UACrB,KAAY;IAAZ;;;;;;;;;;6FAAA,KAAY;;;;wEAAA;;GACb;EASD,AAAA,aAGC,4BAHyB,gBAAwB;4BACzC,gBAAc;;IACrB;;;;;;;;;;6FAAiC,gBAAc;;;;wEAA3B;;GACrB;EAKD,AAAA,cAGC;UAFO,SAAgC,2BAAZ;;;;;;;;;;;mHAAY;UACtC,KAAY;;;;;qBAAa,SAAO;IAAhC;;;;;;;;;;6FAAA,KAAY;;;;wEAAA;;GACb;;;;;;;;;;;;;;;;IAtCD;qCAAA;;;;;;;;;;;0GAAoC;KAAA;IAKpC;qCAAA;;;;;;;;;;;0GAA4C;KAAA;;;;;;;;;;"
+}
