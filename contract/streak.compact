@@ -1,0 +1,81 @@
+/**
+ * streak.compact — Private Focus Streak
+ *
+ * A minimal Compact contract for Level 1: a "focus streak" tracker where
+ * checking in proves a session was long enough WITHOUT ever revealing how
+ * long it actually was, while a separate circuit shows the deliberate
+ * opposite case — a value that IS meant to become public, via disclose().
+ *
+ * PUBLIC (on-chain ledger, visible to anyone):
+ *   - streak_count: how many qualifying check-ins have happened. Advances
+ *     by a fixed public amount (1) each time — never derived from a
+ *     private number, so no disclose() is needed to move it.
+ *   - total_minutes_logged: a running public total of minutes a user
+ *     chose to log openly (e.g. for a public leaderboard). This one IS
+ *     derived from a private circuit input, so advancing it requires
+ *     disclose() — see logMinutes below.
+ *
+ * PRIVATE (circuit input, never stored anywhere):
+ *   - effort_minutes: how long a session actually lasted. Consumed
+ *     entirely inside the ZK proof in checkIn() and discarded — the
+ *     contract proves the session cleared a minimum length without the
+ *     exact duration ever touching the chain.
+ *
+ * WHAT THE USER PROVES WITHOUT REVEALING (checkIn):
+ *   - That effort_minutes >= 15 (the session was long enough to count),
+ *     without disclosing the actual minutes. A 15-minute session and a
+ *     4-hour session both just increment streak_count by exactly 1 —
+ *     indistinguishable on-chain.
+ *
+ * WHAT THE USER DELIBERATELY DISCLOSES (logMinutes):
+ *   - The exact effort_minutes value, on purpose, via disclose() — this
+ *     circuit exists specifically to contrast with checkIn() and show
+ *     that Compact's default is private, and disclose() is the explicit
+ *     opt-in to make something public, not the other way around.
+ */
+pragma language_version >= 0.23;
+
+import CompactStandardLibrary;
+
+// ── Ledger state ─────────────────────────────────────────────────────────────
+// streak_count is PUBLIC. It only ever moves by the literal 1, so no
+// disclose() is needed — nothing private is ever assigned to it.
+export ledger streak_count: Counter;
+
+// total_minutes_logged is also PUBLIC, but unlike streak_count it is
+// derived from a private circuit input (effort_minutes) in logMinutes()
+// below — that derivation is exactly what disclose() exists to permit.
+export ledger total_minutes_logged: Counter;
+
+// ── Circuit: checkIn ──────────────────────────────────────────────────────────
+// effort_minutes is a PRIVATE circuit parameter. The assert runs inside
+// the proof, so a session under 15 minutes simply cannot produce a valid
+// proof — the exact duration is never read by anyone but the caller.
+//
+// No disclose() appears anywhere in this circuit: streak_count.increment(1)
+// advances the ledger by a public literal, not by anything derived from
+// effort_minutes, so there is nothing here that needs to become public.
+export circuit checkIn(effort_minutes: Uint<16>): [] {
+  assert(effort_minutes >= 15, "focus session must be at least 15 minutes to count");
+  streak_count.increment(1);
+}
+
+// ── Circuit: logMinutes ────────────────────────────────────────────────────────
+// The deliberate contrast case. effort_minutes is still a PRIVATE circuit
+// parameter by default — but here the caller WANTS it to become public
+// (e.g. to show up on a leaderboard), so disclose() is used explicitly to
+// permit that. Without disclose(), the compiler refuses this += entirely,
+// because assigning a private value to public state is exactly what
+// disclose() exists to gate.
+export circuit logMinutes(effort_minutes: Uint<16>): [] {
+  assert(effort_minutes > 0, "logged minutes must be positive");
+  total_minutes_logged += disclose(effort_minutes);
+}
+
+// ── Circuit: resetStreak ──────────────────────────────────────────────────────
+// Brings streak_count back to zero. Reads the current public value (not
+// private, so no disclose() needed) and subtracts it from itself.
+export circuit resetStreak(): [] {
+  const current: Uint<64> = streak_count;
+  streak_count -= disclose(current as Uint<16>);
+}
