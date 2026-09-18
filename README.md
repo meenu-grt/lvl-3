@@ -6,13 +6,13 @@
 
 ## Live Demo
 
-`[PASTE LIVE URL AFTER DEPLOYING THE FRONTEND — Vercel/Netlify]`
+[focus-streak.netlify.app](https://focus-streak.netlify.app/)
 
 ## Contract Address
 
 | Network | Address |
 |---------|---------|
-| Preprod | `a5a67ff1c7f8abd30d5ff0f3cbaedfc1c80fefbda8c7c4e5ca71170b5aceb0df` |
+| Preprod | `5d98fa5a8a69222652c81ed14bcc48adca385bef79918fc2edabc28c2159a817` |
 
 ## What This Does
 
@@ -89,6 +89,10 @@ npm run test:run
 - **State transitions (3 tests):** multiple check-ins accumulating the streak, multiple `logMinutes` calls accumulating the public total, and a reset-then-rebuild cycle.
 - **Privacy (4 tests):** the ledger exposes only the two documented public fields; a 15-minute and a 500-minute session are indistinguishable on-chain; `effort_minutes` never appears in serialized contract state; and `logMinutes`'s deliberate disclosure is verified as the intended contrast case, not a leak.
 
+**Test output:**
+
+![16 tests passing](tests-successfull.png)
+
 ## CI/CD
 
 [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on every push to `main` and on every pull request against `main`. Each run:
@@ -102,6 +106,10 @@ npm run test:run
 7. Copies the ZK assets and builds the production frontend bundle
 
 The toolchain version is pinned deliberately: `compact compile` overwrites the committed `managed/` output, and an unpinned `compact update` would install whatever the latest toolchain happens to be at CI run time, which can emit different circuit signatures than the ones this repo's tests and frontend were written against.
+
+## Demo Video
+
+[Watch on Tella](https://www.tella.tv/video/midnight-lvl3-aaji) — wallet connect, a successful circuit call confirming on-chain, and the CI badge showing green.
 
 ## Product Proposal
 
