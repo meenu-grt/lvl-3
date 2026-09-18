@@ -1,6 +1,6 @@
 # Focus Streak
 
-![CI](https://github.com/meenu-grt/meenu-lvl3/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/meenu-grt/lvl-3/actions/workflows/ci.yml/badge.svg)
 
 > A minimal Compact smart contract on Midnight that proves a focus session ran long enough to count, without ever revealing how long it actually ran.
 
@@ -83,7 +83,7 @@ npm run dev
 npm run test:run
 ```
 
-**16 tests passing** — circuit logic, state transitions, and privacy isolation (`effort_minutes` is verified to never appear in the public ledger, and two check-ins of very different real lengths are verified to produce identical public state). See "Run Tests" output below for a category breakdown.
+**16 tests passing**, split across three categories:
 
 - **Circuit logic (9 tests):** `checkIn`'s 15-minute minimum (accepted at the boundary, rejected below it, rejected at zero), `logMinutes`, `resetStreak`, and the starting zero state.
 - **State transitions (3 tests):** multiple check-ins accumulating the streak, multiple `logMinutes` calls accumulating the public total, and a reset-then-rebuild cycle.
